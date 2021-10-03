@@ -8,13 +8,15 @@ int main(int argc, char **argv)
 {
   void* handle = dlopen("/usr/lib/libscry.so", RTLD_LAZY);
 
-  MyClass* (*create)();
-  void (*destroy)(MyClass*);
+  Scry* (*create)();
+  void (*destroy)(Scry*);
 
-  create = (MyClass* (*)())dlsym(handle, "create_object");
-  destroy = (void (*)(MyClass*))dlsym(handle, "destroy_object");
+  create = (Scry* (*)())dlsym(handle, "create_object");
+  destroy = (void (*)(Scry*))dlsym(handle, "destroy_object");
 
-  MyClass* myClass = (MyClass*)create();
-  myClass->DoSomething();
-  destroy( myClass );
+  Scry* scry = (Scry*)create();
+  Card island = scry->cards_named("island");
+  cout << island.getName() << endl;
+  scry->cleanup();
+  destroy( scry );
 }
