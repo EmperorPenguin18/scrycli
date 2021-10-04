@@ -1,5 +1,5 @@
 build: scry_user.cc
-	g++ scry_user.cc -ldl -o scry_user
+	g++ scry_user.cc -ldl -lscry -o scry_user
 
 install: scry_user
 	@mkdir -p /usr/bin/
