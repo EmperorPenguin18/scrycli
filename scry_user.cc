@@ -15,8 +15,8 @@ int main(int argc, char **argv)
   destroy = (void (*)(Scry*))dlsym(handle, "destroy_object");
 
   Scry* scry = (Scry*)create();
-  Card island = scry->cards_named("island");
-  cout << island.getName() << endl;
+  Card * island = scry->cards_named("island");
+  cout << island->getName() << endl;
   scry->cleanup();
   destroy( scry );
 }
