@@ -1,2 +1,2 @@
-# scry_user
-CLI tool for libscry
+# scrycli
+CLI tool for Scryfall

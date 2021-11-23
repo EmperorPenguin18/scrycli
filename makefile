@@ -1,6 +1,6 @@
-build: scry_user.cc
-	g++ scry_user.cc -ldl -o scry_user
+build: scrycli.cc
+	g++ -std=c++20 scrycli.cc -ldl -o scrycli
 
-install: scry_user
+install: scrycli
 	@mkdir -p /usr/bin/
-	@mv scry_user /usr/bin/scry_user
+	@mv scrycli /usr/bin/scrycli
