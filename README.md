@@ -1,6 +1,7 @@
 # scrycli
 CLI tool for Scryfall
-
+## Dependencies
+[libscry](https://github.com/EmperorPenguin18/libscry)
 ## Installation
 
 Arch
