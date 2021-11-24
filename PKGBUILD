@@ -10,7 +10,7 @@ arch=('x86_64')
 license=('GPL3')
 makedepends=('pandoc')
 depends=('libscry')
-sha256sums=('')
+sha256sums=('72fb7097fc196a663b49408c2a405ab67b2fea1b47a72f9f5163fae6de283c98')
 
 build () {
   cd "$srcdir/$pkgname-$pkgver"
