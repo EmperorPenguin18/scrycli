@@ -19,6 +19,7 @@ struct cardstruct {
   string oracle_text;
   string power;
   string toughness;
+  string loyalty;
 };
 
 string linesize(string line, int size) {
@@ -34,15 +35,17 @@ string linesize(string line, int size) {
 }
 
 string format(cardstruct card) {
-  string tab(GAP, ' ');
+  string tab(GAP/2, ' ');
   regex dash("—");
   string output = linesize(card.name + tab + 
     card.mana_cost, SPACE) + "\n";
   output += linesize(card.type_line, SPACE) + "\n";
   output += linesize(card.oracle_text, SPACE) + "\n";
   if (card.power.size() > 0)
-    output += tab + tab + card.power + "/" + 
+    output += tab + tab + tab + tab + card.power + "/" + 
       card.toughness + "\n";
+  if (card.loyalty.size() > 0)
+    output += tab + tab + tab + tab + card.loyalty + "\n";
   output = regex_replace(output, dash, "-");
   return output;
 }
@@ -120,6 +123,7 @@ int main(int argc, char **argv)
             card.oracle_text = splitcard[k]->oracle_text();
             card.power = splitcard[k]->power();
             card.toughness = splitcard[k]->toughness();
+	    card.loyalty = splitcard[k]->loyalty();
             if (k != splitcard.size()-1)
 	      output += format(card) + "//\n";
 	    else output += format(card) + "\n";
@@ -133,6 +137,7 @@ int main(int argc, char **argv)
           card.oracle_text = cards[i+j]->oracle_text();
           card.power = cards[i+j]->power();
           card.toughness = cards[i+j]->toughness();
+	  card.loyalty = cards[i+j]->loyalty();
           cardstr.push_back(format(card) + "\n");
         }
       }
