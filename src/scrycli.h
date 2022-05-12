@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include <argp.h>
 #include <scry/scry.h>
 
 using namespace std;
