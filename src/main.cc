@@ -15,21 +15,24 @@ static struct argp_option options[] = {
     { "random", 'r', 0, 0, "See a random card"},
     { "advanced", 'a', 0, 0, "Input search terms interactively"},
     { "set", 's', 0, 0, "Look at a list of sets"},
+    { "terse", 't', 0, 0, "Only output the names of cards"},
     { 0 } 
 };
 
-enum modes{ NORMAL_MODE, SINGLE_MODE, IMAGE_MODE, RANDOM_MODE, ADVANCED_MODE, SET_MODE };
+enum modes{ NORMAL_MODE, SINGLE_MODE, RANDOM_MODE, ADVANCED_MODE, SET_MODE, TERSE_MODE };
 struct arguments {
     enum modes mode;
+    bool imageMode;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
   struct arguments *arguments = (struct arguments*)state->input;
   switch (key) {
-    case 'i': arguments->mode = IMAGE_MODE; break;
+    case 'i': arguments->imageMode = true; break;
     case 'r': arguments->mode = RANDOM_MODE; break;
     case 'a': arguments->mode = ADVANCED_MODE; break;
     case 's': arguments->mode = SET_MODE; break;
+    case 't': arguments->mode = TERSE_MODE; break;
     case ARGP_KEY_ARG: return 0;
     default: return ARGP_ERR_UNKNOWN;
   }   
@@ -38,12 +41,19 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 
 static struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0 };
 
+bool symbol = false;
+
 static char* cat_args(int argc, char **argv) {
   char* output = (char*)calloc(1, 1);
   size_t length = 0;
   for (int i = 1; i < argc; i++) {
     length += strlen(argv[i])+1;
     output = (char*)realloc(output, length+1);
+    if (symbol == false) {
+      symbol = strchr(argv[i], ':') != NULL;
+      symbol = strchr(argv[i], '<') != NULL;
+      symbol = strchr(argv[i], '>') != NULL;
+    }
     strcat(output, argv[i]);
     strcat(output, " ");
   }
@@ -54,15 +64,47 @@ int main(int argc, char **argv) {
   if (argc > 1) {
     struct arguments arguments;
     arguments.mode = NORMAL_MODE;
+    arguments.imageMode = false;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
     ScryCli scrycli(35, 10);
     char* search = cat_args(argc, argv);
 #ifdef DEBUG
-    printf("Query: %s\n", search);
+    fprintf(stderr, "Query: %s\n", search);
 #endif
+    if (arguments.mode == NORMAL_MODE && symbol == false)
+      arguments.mode = SINGLE_MODE;
     
+#ifdef DEBUG
+    fprintf(stderr, "Mode: %d\n", arguments.mode);
+#endif
     if (arguments.mode == NORMAL_MODE) {
-      cout << scrycli.multi(search);
+      if (arguments.imageMode == false) {
+        cout << scrycli.multi(search);
+      } else {
+	fprintf(stderr, "Images not implemented yet\n");
+      }
+    } else if (arguments.mode == SINGLE_MODE) {
+      if (arguments.imageMode == false) {
+        cout << scrycli.single(search);
+      } else {
+	fprintf(stderr, "Images not implemented yet\n");
+      }
+    } else if (arguments.mode == RANDOM_MODE) {
+      if (arguments.imageMode == false) {
+	fprintf(stderr, "Random mode not implemented yet\n");
+      } else {
+	fprintf(stderr, "Images not implemented yet\n");
+      }
+    } else if (arguments.mode == ADVANCED_MODE) {
+      if (arguments.imageMode == false) {
+	fprintf(stderr, "Advanced mode not implemented yet\n");
+      } else {
+	fprintf(stderr, "Images not implemented yet\n");
+      }
+    } else if (arguments.mode == SET_MODE) {
+      fprintf(stderr, "Set mode not implemented yet\n");
+    } else if (arguments.mode == TERSE_MODE) {
+      fprintf(stderr, "Terse mode not implemented yet\n");
     }
 
     free(search);

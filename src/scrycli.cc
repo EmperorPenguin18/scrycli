@@ -75,8 +75,8 @@ string ScryCli::linesize(string line, int size) {
   while (line.length() > size) {
     int num = line.find(' ', size);
     if (num < 0) break;
-    output += line.substr(0, num+1) + "\n";
-    line = line.substr(num+1, line.length()-num-1);
+    output += line.substr(0, num) + "\n";
+    line = line.substr(num, line.length()-num);
   }
   output += line;
   return output;
@@ -132,9 +132,10 @@ string ScryCli::combine(vector<string> strs) {
   }
   string output = "";
   for (int i = 0; i < maxsize(exploded); i++) {
+    int num;
     for (int j = 0; j < exploded.size(); j++) {
       if (exploded[j].size() == i) exploded[j].push_back("");
-      int num = m_space+m_gap-exploded[j][i].length();
+      num = m_space+m_gap-exploded[j][i].length();
       string * whitespace;
       if (num > 0) whitespace = new string(num, ' ');
       else whitespace = new string("");
@@ -143,5 +144,23 @@ string ScryCli::combine(vector<string> strs) {
     }
     output += "\n";
   }
+  return output;
+}
+
+string ScryCli::single(char* arg) {
+  Card* card = scry->cards_named_cache(arg);
+  if (!card) {
+    cerr << "Search failed" << endl;
+    exit(EXIT_FAILURE);
+  }
+  string output = "";
+  cardstruct card_s = construct_card(card);
+  output += format(card_s);
+  output += "\n" + card->set() + "\n";
+  vector<string> legalities = card->legality();
+  output += "standard: " + legalities[0] + " pioneer: " + legalities[4] + "\n";
+  output += "modern: " + legalities[6] + " legacy: " + legalities[7] + "\n";
+  output += "vintage: " + legalities[9] + " pauper: " + legalities[8] + "\n";
+  output += "commander: " + legalities[11] + "\n";
   return output;
 }
