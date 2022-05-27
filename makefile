@@ -1,5 +1,10 @@
-build: scrycli.cc scrycli.1.md
-	g++ -std=c++20 scrycli.cc -ldl -o scrycli
+build: src/*.cc scrycli.1.md
+	g++ -g -Og -D DEBUG src/*.cc -o scrycli
+	pandoc scrycli.1.md -s -t man -o scrycli.1
+	gzip -f scrycli.1
+
+release: src/*.cc scrycli.1.md
+	g++ -O3 src/*.cc -o scrycli
 	pandoc scrycli.1.md -s -t man -o scrycli.1
 	gzip -f scrycli.1
 
@@ -12,3 +17,7 @@ install: scrycli
 uninstall:
 	@rm /usr/bin/scrycli
 	@rm /usr/share/man/man1/scrycli.1.gz
+
+clean:
+	rm -f scrycli
+	rm -f scrycli.1.gz
