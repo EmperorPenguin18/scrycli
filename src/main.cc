@@ -25,6 +25,8 @@ struct arguments {
     bool imageMode;
 };
 
+bool stopchecking = false;
+
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
   struct arguments *arguments = (struct arguments*)state->input;
   switch (key) {
@@ -47,15 +49,31 @@ static char* cat_args(int argc, char **argv) {
   char* output = (char*)calloc(1, 1);
   size_t length = 0;
   for (int i = 1; i < argc; i++) {
+#ifdef DEBUG
+    fprintf(stderr, "Arg: %s\n", argv[i]);
+#endif
     length += strlen(argv[i])+1;
     output = (char*)realloc(output, length+1);
     if (symbol == false) {
-      symbol = strchr(argv[i], ':') != NULL;
-      symbol = strchr(argv[i], '<') != NULL;
-      symbol = strchr(argv[i], '>') != NULL;
+      if (strchr(argv[i], ':') != NULL) {
+        symbol = true;
+      } else if (strchr(argv[i], '<') != NULL) {
+        symbol = true;
+      } else if (strchr(argv[i], '>') != NULL) {
+        symbol = true;
+      }
+#ifdef DEBUG
+      fprintf(stderr, "Symbol: %d\n", symbol);
+#endif
     }
-    strcat(output, argv[i]);
-    strcat(output, " ");
+    if (argv[i][0] != '-' || stopchecking) {
+#ifdef DEBUG
+      fprintf(stderr, "Adding\n");
+#endif
+      strcat(output, argv[i]);
+      strcat(output, " ");
+    }
+    if (strcmp(argv[i], "--") == 0) stopchecking = true;
   }
   return output;
 }
@@ -81,25 +99,25 @@ int main(int argc, char **argv) {
       if (arguments.imageMode == false) {
         cout << scrycli.multi(search);
       } else {
-	fprintf(stderr, "Images not implemented yet\n");
+        cout << scrycli.multi_image(search);
       }
     } else if (arguments.mode == SINGLE_MODE) {
       if (arguments.imageMode == false) {
         cout << scrycli.single(search);
       } else {
-	fprintf(stderr, "Images not implemented yet\n");
+        cout << scrycli.single_image(search);
       }
     } else if (arguments.mode == RANDOM_MODE) {
       if (arguments.imageMode == false) {
 	fprintf(stderr, "Random mode not implemented yet\n");
       } else {
-	fprintf(stderr, "Images not implemented yet\n");
+	fprintf(stderr, "Random mode not implemented yet\n");
       }
     } else if (arguments.mode == ADVANCED_MODE) {
       if (arguments.imageMode == false) {
 	fprintf(stderr, "Advanced mode not implemented yet\n");
       } else {
-	fprintf(stderr, "Images not implemented yet\n");
+	fprintf(stderr, "Advanced mode not implemented yet\n");
       }
     } else if (arguments.mode == SET_MODE) {
       fprintf(stderr, "Set mode not implemented yet\n");

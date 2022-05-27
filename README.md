@@ -1,7 +1,7 @@
 # scrycli
 CLI tool for Scryfall
 ## Dependencies
-[libscry](https://github.com/EmperorPenguin18/libscry)
+[libscry](https://github.com/EmperorPenguin18/libscry), chafa
 ## Installation
 
 Arch
@@ -18,14 +18,14 @@ Other Linux
 ```
 git clone https://github.com/EmperorPenguin18/scrycli
 cd scrycli
-make
+make release
 make install #as root
 ```
 
 ## Usage
 
 ```
-scrycli SEARCH
+scrycli [OPTION...] SEARCH...
 ```
 Read the man page for more info
 

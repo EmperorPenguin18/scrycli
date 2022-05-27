@@ -17,7 +17,9 @@ class ScryCli {
     ~ScryCli();
 
     string multi(char*);
+    string multi_image(char*);
     string single(char*);
+    string single_image(char*);
   private:
     void* scry_lib;
     Scry* (*create)();

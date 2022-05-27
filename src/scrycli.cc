@@ -70,6 +70,24 @@ string ScryCli::multi(char* arg) {
   return output;
 }
 
+string ScryCli::multi_image(char* arg) {
+  List* list = scry->cards_search_cache(arg);
+  if (!list) {
+    cerr << "Search failed" << endl;
+    exit(EXIT_FAILURE);
+  }
+  vector<Card*> cards = list->cards();
+  for (int i = 0; i < cards.size(); i++) {
+    size_t img_size = 0;
+    byte* image = scry->cards_named_cache(cards[i]->name(), &img_size);
+    FILE* fp = fopen("/tmp/scry.jpg", "wb");
+    fwrite((FILE*)image, sizeof(byte), img_size/sizeof(byte), fp);
+    fclose(fp);
+    system("chafa /tmp/scry.jpg");
+  }
+  return "";
+}
+
 string ScryCli::linesize(string line, int size) {
   string output = "";
   while (line.length() > size) {
@@ -163,4 +181,14 @@ string ScryCli::single(char* arg) {
   output += "vintage: " + legalities[9] + " pauper: " + legalities[8] + "\n";
   output += "commander: " + legalities[11] + "\n";
   return output;
+}
+
+string ScryCli::single_image(char* arg) {
+  size_t img_size = 0;
+  byte* image = scry->cards_named_cache(arg, &img_size);
+  FILE* fp = fopen("/tmp/scry.jpg", "wb");
+  fwrite((FILE*)image, sizeof(byte), img_size/sizeof(byte), fp);
+  fclose(fp);
+  system("chafa /tmp/scry.jpg");
+  return single(arg);
 }
